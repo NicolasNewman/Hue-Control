@@ -1,0 +1,61 @@
+{
+  "name": "huecontrol",
+  "productName": "huecontrol",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": "QuantumPie",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "executableName": "Hue Control",
+        "name": "Hue Control"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "huecontrol",
+            "description": "A desktop application for controling your Hue Smart Lights",
+            "exe": "Hue Control",
+            "iconUrl": "https://www.dropbox.com/s/6ktwacyzifswifk/win_icon.ico?dl=0"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.28",
+    "@electron-forge/maker-deb": "^6.0.0-beta.28",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.28",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.28",
+    "@electron-forge/maker-zip": "^6.0.0-beta.28",
+    "electron": "3.0.4"
+  }
+}
