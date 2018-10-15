@@ -15,37 +15,7 @@
   "author": "QuantumPie",
   "license": "MIT",
   "config": {
-    "forge": {
-      "packagerConfig": {
-        "executableName": "Hue Control",
-        "name": "Hue Control"
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "huecontrol",
-            "description": "A desktop application for controling your Hue Smart Lights",
-            "exe": "Hue Control",
-            "iconUrl": "https://www.dropbox.com/s/6ktwacyzifswifk/win_icon.ico?dl=0"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "forge": "./forge.config.js"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"
