@@ -18,7 +18,9 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^2.0.0",
+    "node-hue-api": "^2.4.4"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.28",

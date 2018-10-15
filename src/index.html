@@ -5,6 +5,49 @@
     <title></title>
   </head>
   <body>
-    Well hey there!!!
+    <script>
+      const remote = require('electron').remote,
+            Store  = require('electron-store'),
+            store  = new Store();
+      
+      const app = require('electron').remote.app;
+      if(store.get('ip', null)) {
+          let home = new remote.BrowserWindow({
+              width: 800,
+              height: 600,
+              show: false
+          })
+
+          home.toggleDevTools();
+          home.setMenu(null);
+          home.loadURL(`file://${__dirname}/components/Home/home.html`)
+          
+          home.once('ready-to-show', () => {
+              home.show()
+          });
+          home.on('closed', () => {
+              home = null;
+              app.quit();
+          });
+      } else {
+          let register = new remote.BrowserWindow({
+              width: 450, 
+              height: 600,
+              resizable: false,
+              show: false
+          })
+          // register.toggleDevTools();
+          register.setMenu(null);
+          register.loadURL(`file://${__dirname}/components/Register/register.html`);
+
+          register.once('ready-to-show', () => {
+              register.show()
+          });
+          register.on('closed', () => {
+              register = null;
+              app.quit();
+          });
+      }
+    </script>
   </body>
 </html>
