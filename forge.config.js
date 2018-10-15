@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     electronPackagerConfig: {
-        icon: path.resolve(__dirname, "src/assets/icons/win_icon.ico")
+        icon: path.resolve(__dirname, "src/assets/icons/test.ico")
     },
     packagerConfig: {
         executableName: "Hue Control",
@@ -14,8 +14,8 @@ module.exports = {
         config: {
         name: "huecontrol",
         description: "A desktop application for controling your Hue Smart Lights",
-        iconUrl: "https://github.com/NicolasNewman/Hue-Control/blob/master/src/assets/icons/win_icon.ico?raw=true",
-        setupIcon: path.resolve(__dirname, "src/assets/icons/win_icon.ico"),
+        iconUrl: "https://github.com/NicolasNewman/Hue-Control/blob/master/src/assets/icons/test.ico?raw=true",
+        setupIcon: path.resolve(__dirname, "src/assets/icons/test.ico"),
         setupExe: "Hue Control Installer.exe"
         }
     },
