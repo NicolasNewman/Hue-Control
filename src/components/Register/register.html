@@ -3,8 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title>Register</title>
+        <link rel="stylesheet" href="../../assets/css/font.css">
+        <link rel="stylesheet" href="../../assets/css/spinner.css">
+        <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet" href="register.css">
     </head>
     <body>
-        <p>Register</p>
+        <h1 class="info__header">Searching for devices...</h1>
+        <button class="btn" id="retry-search" style="display:none">Retry</button>
+        <div class="section__bridge">
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            <div class="devices">
+            </div>
+        </div>
+        <div class="section__connect">
+                <div class="loading-bar-bg">
+                        <div class="loading-bar-shrink"></div>
+                </div>
+                <img src="../../assets/img/bridge.png" alt="Bridge">
+                <button class="btn" id="retry-sync" style="display:none">Retry</button>
+        </div>
+        <script src="register.js"></script>
     </body>
 </html>
