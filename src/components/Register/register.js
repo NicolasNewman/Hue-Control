@@ -28,7 +28,7 @@ const hueRegisterController = (() => {
 
     // Called when each available bridge are obtained
     const displayBridges = (bridges) => {
-        console.log(`Found a bridge: ${JSON.stringify(bridges)}`);
+        console.log(`Found bridges: ${JSON.stringify(bridges)}`);
         bridges.forEach(bridge => {
             bridgeText.push(`<p data-ip="${bridge.ipaddress}" class="hue-bridge">${JSON.stringify(bridge)}</p>`)
         });
@@ -41,11 +41,12 @@ const hueRegisterController = (() => {
                 elements.list.insertAdjacentHTML('beforeend', element);
             });
             elements.header.innerHTML = 'Select a device to connect to';
+            elements.btn_retry_search.style.display = 'none';
         } else {
             elements.header.innerHTML = 'No bridges found'
+            elements.btn_retry_search.style.display = 'block';
         }
         elements.spinner.style.display = 'none';
-        initEventListener();
     }
 
     const registerBridgeSuccess = (bridge) => {
@@ -65,13 +66,13 @@ const hueRegisterController = (() => {
 
     // Initializes the event listeners
     const initEventListener = () => {
-        document.querySelectorAll('.devices p').forEach(p => {
-            p.addEventListener('click', (event) => {
+        document.addEventListener('click', (e) => {
+            if(e.target && e.target.class == 'devices') {
                 elements.section_bridge.style.display = 'none';
                 elements.section_connect.style.display = 'block';
                 elements.header.innerHTML = 'Please press the button in the middle of your bridge'
                 
-                host = p.getAttribute('data-ip');
+                host = e.target.getAttribute('data-ip');
                 for(var x=1; x<=6; x++) {
                     window.setTimeout(((x) => {
                         if(!syncSuccess) {
@@ -79,22 +80,48 @@ const hueRegisterController = (() => {
                         }
                     }).bind(null, x), 5000 * x);
                 }
-            });
+            }
         });
+        // document.querySelectorAll('.devices p').forEach(p => {
+        //     // TODO: Use event delegation
+        //     p.addEventListener('click', (event) => {
+        //         elements.section_bridge.style.display = 'none';
+        //         elements.section_connect.style.display = 'block';
+        //         elements.header.innerHTML = 'Please press the button in the middle of your bridge'
+                
+        //         host = p.getAttribute('data-ip');
+        //         for(var x=1; x<=6; x++) {
+        //             window.setTimeout(((x) => {
+        //                 if(!syncSuccess) {
+        //                     hue.registerUser(host).then(registerBridgeSuccess).fail(registerBridgeError.bind(null, x)).done();
+        //                 }
+        //             }).bind(null, x), 5000 * x);
+        //         }
+        //     });
+        // });
         elements.btn_retry.addEventListener('click', (event) => {
-            console.log("clicked");
+            // TODO: improve retry 
+            elements.header.innerHTML = 'Select a device to connect to';
+            elements.btn_retry.style.display = 'none';
+            elements.section_bridge.style.display = 'block';
+            elements.section_connect.style.display = 'none';
         });
         elements.btn_retry_search.addEventListener('click', (event) => {
             scanForBridge();
         });
     }
-
+    
     return {
-        scanForBridge:  () => {
+        scanForBridge: () => {
            scanForBridge();
+        },
+
+        initEventListener: () => {
+            initEventListener();
         }
     }
 })();
 
 elements.section_connect.style.display = 'none';
+hueRegisterController.initEventListener();
 hueRegisterController.scanForBridge();

@@ -19,6 +19,11 @@ img {
     transform: translateY(1px);
 }
 
+.btn:focus {
+    outline: none;
+    /* background-color: #3e88a3; */
+}
+
 @keyframes loading-bar {
     0% {
         width: 100%;
