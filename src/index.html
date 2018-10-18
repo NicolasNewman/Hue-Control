@@ -8,16 +8,18 @@
     <script>
         const remote = require('electron').remote,
             Store  = require('electron-store'),
-            store  = new Store();
+            store  = new Store(),
+            path   = require('path');
         
         const app = require('electron').remote.app;
         if(store.get('ip', null)) {
             let home = new remote.BrowserWindow({
                 width: 800,
                 height: 600,
-                show: false
+                show: false,
+                icon: path.resolve(__dirname, "assets/icons/win_icon.ico")
             })
-
+            
             home.toggleDevTools();
             home.setMenu(null);
             home.loadURL(`file://${__dirname}/components/Home/home.html`)
@@ -34,7 +36,8 @@
                 width: 450, 
                 height: 600,
                 // resizable: false,
-                show: false
+                show: false,
+                icon: path.resolve(__dirname, "assets/icons/win_icon.ico")
             })
             register.toggleDevTools();
             register.setMenu(null);
