@@ -1,3 +1,10 @@
+/* 
+#202225
+#282b30
+#2f3136
+#36393f
+*/
+
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +18,40 @@ h1 {
 body {
     font-family: 'Open Sans', sans-serif;
     color: #FFF;
-    background-color: #212121;
+    background-color: #282b30;
     text-align: center;
+}
+
+.menu-bar {
+    background-color: #202225;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    -webkit-app-region: drag;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);}
+
+.menu-bar__img {
+    width: 20px;
+    display: inline-block;
+    margin-right: auto;
+}
+
+.menu-bar__icon-container {
+    -webkit-app-region: no-drag;
+}
+
+.menu-bar .menu-bar__icon {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.menu-bar i:hover {
+    background-color: #282b30
+}
+
+.menu-bar i:last-of-type:hover {
+    background-color: red;
 }

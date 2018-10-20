@@ -2,7 +2,8 @@ const Hue    = require('node-hue-api'),
       HueApi = Hue.HueApi,
       hue    = new HueApi(),
       Store  = require('electron-store'),
-      store  = new Store();
+      store  = new Store(),
+      global = require('../../assets/js/global');
 
 const elements = {
     list: document.querySelector('.devices'),
@@ -11,9 +12,19 @@ const elements = {
     section_connect: document.querySelector('.section__connect'),
     section_bridge: document.querySelector('.section__bridge'),
     loading_bar_shrink: document.querySelector('.loading_bar_shrink'),
-    btn_retry: document.querySelector('#retry-sync'),
+    btn_retry_sync: document.querySelector('#retry-sync'),
     btn_retry_search: document.querySelector('#retry-search')
 }
+
+const setHeaderText = (text) => {
+    elements.header.innerHTML = text
+}
+
+// const toggleVisibility = (element, state) => {
+//     if (element.style) {
+//         element.style.display = state
+//     }
+// }
 
 const hueRegisterController = (() => {
     const bridgeText = [];
@@ -40,37 +51,44 @@ const hueRegisterController = (() => {
             bridgeText.forEach(element => {
                 elements.list.insertAdjacentHTML('beforeend', element);
             });
-            elements.header.innerHTML = 'Select a device to connect to';
-            elements.btn_retry_search.style.display = 'none';
+            setHeaderText('Select a device to connect to');
+            global.toggleVisibility(elements.btn_retry_search, 'none');
+            // elements.btn_retry_search.style.display = 'none';
         } else {
-            elements.header.innerHTML = 'No bridges found'
-            elements.btn_retry_search.style.display = 'block';
+            setHeaderText('No bridges found');
+            global.toggleVisibility(elements.btn_retry_search, 'block');
+            // elements.btn_retry_search.style.display = 'block';
         }
-        elements.spinner.style.display = 'none';
+        global.toggleVisibility(elements.spinner, 'none');
+        // elements.spinner.style.display = 'none';
     }
-
+    
     const registerBridgeSuccess = (bridge) => {
         syncSuccess = true;
         store.set('ip', host);
         store.set('username', bridge);
         console.log(bridge);
     }
-
+    
     const registerBridgeError = (x, err) => {
         console.log(err);
         if(x >= 6) {
-            elements.header.innerHTML = 'Bridge timeout';
-            elements.btn_retry.style.display = 'block';
+            setHeaderText('Bridge timeout');
+            global.toggleVisibility(elements.btn_retry_sync, 'block');
+            // elements.btn_retry_sync.style.display = 'block';
         }
     }
-
+    
     // Initializes the event listeners
     const initEventListener = () => {
         document.addEventListener('click', (e) => {
-            if(e.target && e.target.class == 'devices') {
-                elements.section_bridge.style.display = 'none';
-                elements.section_connect.style.display = 'block';
-                elements.header.innerHTML = 'Please press the button in the middle of your bridge'
+            console.log(e.target);
+            if(e.target && e.target.className == 'hue-bridge') {
+                global.toggleVisibility(elements.section_bridge, 'none');
+                global.toggleVisibility(elements.section_connect, 'block');
+                // elements.section_bridge.style.display = 'none';
+                // elements.section_connect.style.display = 'block';
+                setHeaderText('Please press the button in the middle of your bridge');
                 
                 host = e.target.getAttribute('data-ip');
                 for(var x=1; x<=6; x++) {
@@ -82,29 +100,15 @@ const hueRegisterController = (() => {
                 }
             }
         });
-        // document.querySelectorAll('.devices p').forEach(p => {
-        //     // TODO: Use event delegation
-        //     p.addEventListener('click', (event) => {
-        //         elements.section_bridge.style.display = 'none';
-        //         elements.section_connect.style.display = 'block';
-        //         elements.header.innerHTML = 'Please press the button in the middle of your bridge'
-                
-        //         host = p.getAttribute('data-ip');
-        //         for(var x=1; x<=6; x++) {
-        //             window.setTimeout(((x) => {
-        //                 if(!syncSuccess) {
-        //                     hue.registerUser(host).then(registerBridgeSuccess).fail(registerBridgeError.bind(null, x)).done();
-        //                 }
-        //             }).bind(null, x), 5000 * x);
-        //         }
-        //     });
-        // });
-        elements.btn_retry.addEventListener('click', (event) => {
+        elements.btn_retry_sync.addEventListener('click', (event) => {
             // TODO: improve retry 
-            elements.header.innerHTML = 'Select a device to connect to';
-            elements.btn_retry.style.display = 'none';
-            elements.section_bridge.style.display = 'block';
-            elements.section_connect.style.display = 'none';
+            setHeaderText('Select a device to connect to');
+            global.toggleVisibility(elements.btn_retry_sync, 'none');
+            global.toggleVisibility(elements.section_bridge, 'block');
+            global.toggleVisibility(elements.section_connect, 'none');
+            // elements.btn_retry_sync.style.display = 'none';
+            // elements.section_bridge.style.display = 'block';
+            // elements.section_connect.style.display = 'none';
         });
         elements.btn_retry_search.addEventListener('click', (event) => {
             scanForBridge();
@@ -122,6 +126,7 @@ const hueRegisterController = (() => {
     }
 })();
 
-elements.section_connect.style.display = 'none';
+// elements.section_connect.style.display = 'none';
+global.toggleVisibility(elements.section_connect, 'none');
 hueRegisterController.initEventListener();
 hueRegisterController.scanForBridge();

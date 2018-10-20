@@ -5,9 +5,20 @@
         <title>Home</title>
         <link rel="stylesheet" href="../../assets/css/font.css">
         <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet" href="../../../node_modules/@mdi/font/css/materialdesignicons.min.css">
     </head>
     <body>
+        <div class="menu-bar">
+            <img src="../../assets/icons/win_icon.ico" alt="" class="menu-bar__img">
+            <span class="menu-bar__icon-container">
+                <i id="btn-min" class="menu-bar__icon mdi mdi-window-minimize"></i>
+                <i id="btn-max" class="menu-bar__icon mdi mdi-window-maximize"></i>
+                <i id="btn-close" class="menu-bar__icon mdi mdi-close"></i>
+            </span>
+        </div>
+        
         <p>Home</p>
         <script src="home.js"></script>
+        <script src="../../assets/js/menuBar.js"></script>
     </body>
 </html>
