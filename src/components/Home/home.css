@@ -1,0 +1,36 @@
+.content {
+
+}
+
+section {
+    height: 578px;
+    float: left;
+}
+
+.section__mode {
+    width: 10%;
+    background-color: #282b30;
+}
+
+.section__lights {
+    width: 20%;
+    background-color: #2f3136;
+}
+
+.section__actions {
+    width: 70%;
+    background-color: #36393f;
+}
+
+.mode__container {
+    height: 80px;
+}
+
+.mode__container:hover {
+    background-color: #2f3136; 
+    color: #fffb28;
+}
+
+.mode__container i {
+    font-size: 3.5rem;
+}

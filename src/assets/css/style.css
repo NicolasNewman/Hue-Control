@@ -34,6 +34,7 @@ body {
     width: 20px;
     display: inline-block;
     margin-right: auto;
+    margin-left: 5px;
 }
 
 .menu-bar__icon-container {

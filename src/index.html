@@ -22,7 +22,7 @@
             })
             
             home.toggleDevTools();
-            home.setMenu(null);
+            // home.setMenu(null);
             home.loadURL(`file://${__dirname}/components/Home/home.html`)
             
             home.once('ready-to-show', () => {
@@ -34,7 +34,7 @@
             });
         } else {
             let register = new remote.BrowserWindow({
-                width: 450, 
+                width: 900, 
                 height: 600,
                 // resizable: false,
                 show: false,
