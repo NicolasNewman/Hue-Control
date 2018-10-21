@@ -14,15 +14,16 @@
         const app = require('electron').remote.app;
         if(store.get('ip', null)) {
             let home = new remote.BrowserWindow({
-                width: 800,
+                width: 900,
                 height: 600,
                 show: false,
                 frame: false,
+                resizable: false,
                 icon: path.resolve(__dirname, "assets/icons/win_icon.ico")
             })
             
-            home.toggleDevTools();
-            // home.setMenu(null);
+            // home.toggleDevTools();
+            home.setMenu(null);
             home.loadURL(`file://${__dirname}/components/Home/home.html`)
             
             home.once('ready-to-show', () => {
@@ -34,14 +35,14 @@
             });
         } else {
             let register = new remote.BrowserWindow({
-                width: 900, 
+                width: 450, 
                 height: 600,
-                // resizable: false,
+                resizable: false,
                 show: false,
                 frame: false,
                 icon: path.resolve(__dirname, "assets/icons/win_icon.ico")
             })
-            register.toggleDevTools();
+            // register.toggleDevTools();
             register.setMenu(null);
             register.loadURL(`file://${__dirname}/components/Register/register.html`);
 

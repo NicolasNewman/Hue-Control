@@ -56,3 +56,20 @@ body {
 .menu-bar i:last-of-type:hover {
     background-color: red;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+
+}
+
+::-webkit-scrollbar-thumb {
+    background: #282b30;
+    border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+}

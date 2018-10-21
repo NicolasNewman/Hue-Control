@@ -8,22 +8,48 @@ section {
 }
 
 .section__mode {
-    width: 10%;
+    width: 5%;
     background-color: #282b30;
 }
 
 .section__lights {
-    width: 20%;
+    width: 30%;
     background-color: #2f3136;
+    overflow-y: hidden;
+}
+
+.section__lights:hover {
+    overflow-y: auto;
+}
+
+.lights__card-container  {
+    padding-right: 5px;
+}
+
+.lights__card-container:hover {
+    padding-right: 0px;
+}
+
+.light__card {
+    width: 40%;
+    height: 60px;
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+    background-color: #282b30;
+}
+
+.light__card p {
+    font-size: 0.6rem;
 }
 
 .section__actions {
-    width: 70%;
+    width: 65%;
     background-color: #36393f;
 }
 
 .mode__container {
-    height: 80px;
+    height: 50px;
 }
 
 .mode__container:hover {
@@ -32,5 +58,5 @@ section {
 }
 
 .mode__container i {
-    font-size: 3.5rem;
+    font-size: 2.3rem;
 }
