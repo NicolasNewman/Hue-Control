@@ -1,4 +1,6 @@
-const remote = require('electron').remote; 
+if (!remote) {
+    remote = require('electron').remote; 
+}
 const app = require('electron').remote.app;
 
 

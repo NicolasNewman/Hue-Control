@@ -1,5 +1,10 @@
 const { app, BrowserWindow } = require('electron');
 
+global.hue_api = {
+  hue: undefined,
+  connected: false
+}
+
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
