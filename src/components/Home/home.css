@@ -8,12 +8,12 @@ section {
 }
 
 .section__mode {
-    width: 5%;
+    width: 55px;
     background-color: #282b30;
 }
 
 .section__lights {
-    width: 30%;
+    width: 250px;
     background-color: #2f3136;
     overflow-y: hidden;
 }
@@ -31,20 +31,64 @@ section {
 }
 
 .light__card {
-    width: 40%;
-    height: 60px;
-    padding: 5px;
-    margin: 5px;
+    width: 90%;
+    height: 100px;
+    margin: 5%;
     display: inline-block;
     background-color: #282b30;
 }
 
+.light__card div::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.light__card div {
+    border-bottom: 1px solid #FFF;
+}
+
 .light__card p {
-    font-size: 0.6rem;
+    font-size: 0.9rem;
+}
+
+.light__card span {
+    display: inline-flex;
+    vertical-align: -webkit-baseline-middle;
+}
+
+.light__card span:first-of-type {
+    float: left;
+    margin-left: 2%;
+}
+
+.light__card span:last-of-type {
+    float: right;
+    margin-left: 2%;
+}
+
+.light__card i {
+    font-size: 1.5rem;
+}
+
+.light__card i:hover {
+    color: #fffb28;
+}
+
+/* .light__card i.star {
+
+}
+
+.light__card i.bulb {
+
+} */
+
+.light__card hr {
+
 }
 
 .section__actions {
-    width: 65%;
+    width: 445px;
     background-color: #36393f;
 }
 

@@ -11,7 +11,9 @@ const host     = store.get('ip'),
 const elements = {
     mode_lights: document.querySelector('#mode--lights'),
     mode_groups: document.querySelector('#mode--groups'),
-    section_lights: document.querySelector('.section__lights').firstElementChild
+    mode_settings: document.querySelector('#mode--settings'),
+    section_lights: document.querySelector('.section__lights').firstElementChild,
+    section_actions: document.querySelector('.section__actions')
 }
 
 const homeController = (() => {
@@ -19,6 +21,7 @@ const homeController = (() => {
         elements.mode_lights.addEventListener('click', (e) => {
             elements.mode_lights.style.color = '#fffb28';
             elements.mode_groups.style.color = '#fff';
+            elements.mode_settings.style.color = '#fff';   
 
             hue.lights((err, lights) => {
                 if (err) throw err;
@@ -27,10 +30,11 @@ const homeController = (() => {
                     console.log(light);
                     elements.section_lights.insertAdjacentHTML('beforeend', `
                         <div data-id="${light.id}" class="light__card">
-                            <i class="mdi mdi-star-outline"></i>
-                            <p>${light.name}</p>
-                            <i class="mdi mdi-lightbulb-outline"></i>
-                            <hr>
+                            <div>
+                                <span><i class="star mdi mdi-star-outline"></i></span>
+                                <span><p>${light.name}</p></span>
+                                <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                            </div>
                             <p>${light.type}</p>
                         </div>                        
                     `);
@@ -40,6 +44,7 @@ const homeController = (() => {
         elements.mode_groups.addEventListener('click', (e) => {
             elements.mode_groups.style.color = '#fffb28';
             elements.mode_lights.style.color = '#fff';    
+            elements.mode_settings.style.color = '#fff';    
             
             hue.groups((err, groups) => {
                 if (err) throw err;
@@ -49,8 +54,12 @@ const homeController = (() => {
                     if (group.id !== "0") {
                         elements.section_lights.insertAdjacentHTML('beforeend', `
                             <div data-id="${group.id}" class="light__card">
-                                <p>${group.name}</p>
-                            </div>                        
+                                <div>
+                                    <span><i class="star mdi mdi-star-outline"></i></span>
+                                    <span><p>${group.name}</p></span>
+                                    <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                                </div>
+                            </div>                                           
                         `);
                     }
                 });
@@ -63,14 +72,32 @@ const homeController = (() => {
         elements.mode_groups.style.display = "none";
         elements.mode_lights.style.display = "none";
     }
+
+    const initSettingsListener = (connected) => {
+        elements.mode_settings.addEventListener('click', (e) => {
+            elements.mode_settings.style.color = '#fffb28';   
+            elements.mode_groups.style.color = '#fff';
+            elements.mode_lights.style.color = '#fff';  
+            
+            while(elements.section_actions.firstChild) elements.section_actions.removeChild(elements.section_actions.firstChild);
+            if (connected) {
+
+            } else {
+                elements.section_actions.insertAdjacentHTML('afterbegin', `
+                    <p>Connect to a new bridge:</p>
+                `);
+            }
+        });
+    }
     
     return {
         init: () => {
-            // console.log(remote.getGlobal('hue_api').connected);
             if (remote.getGlobal('hue_api').connected) {
                 initValidEventListener();
+                initSettingsListener(true);
             } else {
                 initInvalidEventListener();
+                initSettingsListener(false);
             }
         }
     }
