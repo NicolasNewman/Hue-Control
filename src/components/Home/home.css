@@ -72,7 +72,7 @@ section {
 }
 
 .light__card i:hover {
-    color: #fffb28;
+    color: #fffb28 !important;
 }
 
 /* .light__card i.star {
