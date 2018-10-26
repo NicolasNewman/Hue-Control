@@ -71,21 +71,13 @@ section {
     font-size: 1.5rem;
 }
 
-.light__card i:hover {
+.light__card i.mdi-star-outline:hover, .light__card i.mdi-lightbulb-outline:hover {
     color: #fffb28 !important;
 }
 
-/* .light__card i.star {
-
-}
-
-.light__card i.bulb {
-
+/* .light__card i.mdi-star:hover, .light__card i.mdi-lightbulb:hover {
+    color: #fff !important;
 } */
-
-.light__card hr {
-
-}
 
 .section__actions {
     width: 445px;

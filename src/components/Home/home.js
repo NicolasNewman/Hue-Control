@@ -34,9 +34,13 @@ const elements = (() => {
 })();
 
 const homeController = (() => {
+    // Main event listeners when there is a valid connection
     const initValidEventListener = () => {
+        // Event delegation
         document.addEventListener('click', (e) => {
+            // If a star to favorite is clicked
             if(e.target && e.target.className.includes('star')) {
+                // If the star is within a card
                 if (e.target.parentElement.parentElement.parentElement.className.includes('light__card')) {
                     const isLight = e.target.parentElement.parentElement.parentElement.getAttribute('data-type') === "light";
                     if (e.target.className.includes('outline')) { // The user wants to favorite
@@ -58,8 +62,47 @@ const homeController = (() => {
                     }
                 }
             }
+            if(e.target && e.target.className.includes('lightbulb')) {
+                // If the lightbulb is within a card
+                if (e.target.parentElement.parentElement.parentElement.className.includes('light__card')) {
+                    const isLight = e.target.parentElement.parentElement.parentElement.getAttribute('data-type') === "light";
+                    if (e.target.className.includes('outline')) { // The user wants to turn on
+                        e.target.style.color = '#fffb28';
+                        e.target.className = e.target.className.replace('-outline', '-on');
+
+                        const id = parseInt(e.target.parentElement.parentElement.parentElement.getAttribute('data-id'));
+                        hue.setLightState(id, {
+                            "on": true
+                        }).then((res) => {
+                            console.log("Modified light");
+                        }).fail((err) => {
+                            console.log("Couldn't modify light")
+                        }).done();
+                        //const obj = store.get('favorite');
+                        //isLight ? obj.lights[id] = {enabled: true} : obj.groups[id] = {enabled: true}
+                        //store.set('favorite', obj);
+                    } else { // The user wants to turn off
+                        e.target.style.color = '#fff';
+                        e.target.className = e.target.className.replace('-on', '') + '-outline';
+                        
+                        const id = parseInt(e.target.parentElement.parentElement.parentElement.getAttribute('data-id'));
+                        hue.setLightState(id, {
+                            "on": false
+                        }).then((res) => {
+                            console.log("Modified light");
+                        }).fail((err) => {
+                            console.log("Couldn't modify light")
+                        }).done();
+                        
+                        //const obj = store.get('favorite');
+                        //isLight ? obj.lights[id] = {enabled: false} : obj.groups[id] = {enabled: false}
+                        //store.set('favorite', obj);
+                    }
+                }
+            }
         });
         
+        // Event for when the light tab is clicked
         elements.mode_lights.addEventListener('click', (e) => {
             elements.resetModeColor();
             elements.mode_lights.style.color = '#fffb28';
@@ -68,22 +111,26 @@ const homeController = (() => {
                 if (err) throw err;
                 while(elements.section_lights.firstChild) elements.section_lights.removeChild(elements.section_lights.firstChild);
                 const favoriteData = store.get('favorite').lights;
+                const lightData = store.get('lightState');
                 lights.lights.forEach((light) => {
                     console.log(light);
                     const favoriteIdData = favoriteData[light.id];
+                    const lightIdData = lightData[light.id];
                     elements.section_lights.insertAdjacentHTML('beforeend', `
-                    <div data-id="${light.id}" data-type="light" class="light__card">
-                    <div>
-                    <span><i ${favoriteIdData && favoriteIdData.enabled ? "style='color: #fffb28'" : ""} class="star mdi ${favoriteIdData && favoriteIdData.enabled ? "mdi-star" : "mdi-star-outline"}"></i></span>
-                    <span><p>${light.name}</p></span>
-                    <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
-                    </div>
-                    <p>${light.type}</p>
-                    </div>                        
+                        <div data-id="${light.id}" data-type="light" class="light__card">
+                            <div>
+                                <span><i ${favoriteIdData && favoriteIdData.enabled ? "style='color: #fffb28'" : ""} class="star mdi ${favoriteIdData && favoriteIdData.enabled ? "mdi-star" : "mdi-star-outline"}"></i></span>
+                                <span><p>${light.name}</p></span>
+                                <span><i ${lightIdData.on ? "style='color: #fffb28'" : ""} class="bulb mdi ${lightIdData.on ? "mdi-lightbulb-on" : "mdi-lightbulb-outline"}"></i></span>                            
+                            </div>
+                            <p>${light.type}</p>
+                        </div>                        
                     `);
                 });
             });
         });
+
+        // Event for when the group tab is clicked
         elements.mode_groups.addEventListener('click', (e) => {
             elements.resetModeColor();
             elements.mode_groups.style.color = '#fffb28';
@@ -97,51 +144,57 @@ const homeController = (() => {
                     if (group.id !== "0") {
                         const favoriteIdData = favoriteData[group.id];
                         elements.section_lights.insertAdjacentHTML('beforeend', `
-                        <div data-id="${group.id}" data-type="group" class="light__card">
-                            <div>
-                                <span><i ${favoriteIdData && favoriteIdData.enabled ? "style='color: #fffb28'" : ""} class="star mdi ${favoriteIdData && favoriteIdData.enabled ? "mdi-star" : "mdi-star-outline"}"></i></span>
-                                <span><p>${group.name}</p></span>
-                                <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
-                            </div>
-                        </div>                                           
+                            <div data-id="${group.id}" data-type="group" class="light__card">
+                                <div>
+                                    <span><i ${favoriteIdData && favoriteIdData.enabled ? "style='color: #fffb28'" : ""} class="star mdi ${favoriteIdData && favoriteIdData.enabled ? "mdi-star" : "mdi-star-outline"}"></i></span>
+                                    <span><p>${group.name}</p></span>
+                                    <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                                </div>
+                            </div>                                           
                         `);
                     }
                 });
             });
         });
 
+        // Event for when the favorite tab is clicked
         elements.mode_favorite.addEventListener('click', (e) => {
             elements.resetModeColor();
             elements.mode_favorite.style.color = '#fffb28';
             
+            const favoriteData = store.get('favorite');
+
+            // Show favorite lights
             hue.lights((err, lights) => {
                 if (err) throw err;
                 while(elements.section_lights.firstChild) elements.section_lights.removeChild(elements.section_lights.firstChild);
                 lights.lights.forEach((light) => {
-                    console.log(light);
-                    if (store.get('favorite').lights[light.id].enabled) {
+                    const favoriteLight = favoriteData.lights[light.id];
+                    if (favoriteLight && favoriteLight.enabled) {
                         elements.section_lights.insertAdjacentHTML('beforeend', `
-                            <div data-id="${light.id}" class="light__card">
-                                <div>
-                                    <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
+                        <div data-id="${light.id}" data-type="light" class="light__card">
+                        <div>
+                        <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
                                     <span><p>${light.name}</p></span>
                                     <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
                                 </div>
                                 <p>${light.type}</p>
-                            </div>                        
-                        `);
-                    }
-                });
+                                </div>                        
+                                `);
+                            }
+                        });
             });
-
+            
+            // Show favorite groups
             hue.groups((err, groups) => {
                 if (err) throw err;
                 //while(elements.section_lights.firstChild) elements.section_lights.removeChild(elements.section_lights.firstChild);
                 groups.forEach((group) => {
                     if (group.id !== "0") {
-                        if (store.get('favorite').groups[group.id].enabled) {
+                        const favoriteGroup = favoriteData.groups[group.id];
+                        if (favoriteGroup && favoriteGroup.enabled) {
                             elements.section_lights.insertAdjacentHTML('beforeend', `
-                                <div data-id="${group.id}" class="light__card">
+                                <div data-id="${group.id}" data-type="group" class="light__card">
                                     <div>
                                         <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
                                         <span><p>${group.name}</p></span>
@@ -156,6 +209,7 @@ const homeController = (() => {
         });
     }
     
+    // If there is no valid connection, hide the lights, groups, and favorite tabs.
     const initInvalidEventListener = () => {
         console.log("here");
         elements.mode_groups.style.display = "none";
@@ -163,6 +217,7 @@ const homeController = (() => {
         elements.mode_favorite.style.display = "none";
     }
     
+    // Initialize the setting event listener (will show different options depending on weather there is a valid connection)
     const initSettingsListener = (connected) => {
         elements.mode_settings.addEventListener('click', (e) => {
             elements.resetModeColor();
@@ -179,7 +234,8 @@ const homeController = (() => {
         });
     }
 
-    const initFirstLaunch = () => {
+    // Initialize stored data if it doesn't already exist
+    const initLaunch = () => {
         if(!store.get('favorite', null)) {
             store.set('favorite', {
                 lights: {
@@ -190,11 +246,30 @@ const homeController = (() => {
                 }
             });
         }
+        if(!store.get('lightState', null)) { // lightState doesn't exists
+            store.set('lightState', {
+
+            });
+        }
+
+        hue.lights((err, lights) => {
+            if (err) throw err;
+            const lightState = store.get('lightState');
+            let i = 0;
+            lights.lights.forEach((light) => {
+                setTimeout(() => { // Avoid overloading bridge
+                    hue.lightStatus(light.id).then((status) => {
+                        lightState[light.id] = status.state;
+                    }).done(store.set('lightState', lightState))
+                }, 50*i);
+                i++;
+            });
+        });
     }
     
     return {
         init: () => {
-            initFirstLaunch();
+            initLaunch();
             if (remote.getGlobal('hue_api').connected) {
                 initValidEventListener();
                 initSettingsListener(true);
