@@ -71,13 +71,23 @@ const homeController = (() => {
                         e.target.className = e.target.className.replace('-outline', '-on');
 
                         const id = parseInt(e.target.parentElement.parentElement.parentElement.getAttribute('data-id'));
-                        hue.setLightState(id, {
-                            "on": true
-                        }).then((res) => {
-                            console.log("Modified light");
-                        }).fail((err) => {
-                            console.log("Couldn't modify light")
-                        }).done();
+                        if (isLight) {
+                            hue.setLightState(id, {
+                                "on": true
+                            }).then((res) => {
+                                console.log("Modified light");
+                            }).fail((err) => {
+                                console.log("Couldn't modify light")
+                            }).done();
+                        } else {
+                            hue.setGroupLightState(id, {
+                                "on": true
+                            }).then((res) => {
+                                console.log("Modified light");
+                            }).fail((err) => {
+                                console.log("Couldn't modify light")
+                            }).done();
+                        }
                         //const obj = store.get('favorite');
                         //isLight ? obj.lights[id] = {enabled: true} : obj.groups[id] = {enabled: true}
                         //store.set('favorite', obj);
@@ -86,13 +96,23 @@ const homeController = (() => {
                         e.target.className = e.target.className.replace('-on', '') + '-outline';
                         
                         const id = parseInt(e.target.parentElement.parentElement.parentElement.getAttribute('data-id'));
-                        hue.setLightState(id, {
-                            "on": false
-                        }).then((res) => {
-                            console.log("Modified light");
-                        }).fail((err) => {
-                            console.log("Couldn't modify light")
-                        }).done();
+                        if (isLight) {
+                            hue.setLightState(id, {
+                                "on": false
+                            }).then((res) => {
+                                console.log("Modified light");
+                            }).fail((err) => {
+                                console.log("Couldn't modify light")
+                            }).done();
+                        } else {
+                            hue.setGroupLightState(id, {
+                                "on": false
+                            }).then((res) => {
+                                console.log("Modified light");
+                            }).fail((err) => {
+                                console.log("Couldn't modify light")
+                            }).done();
+                        }
                         
                         //const obj = store.get('favorite');
                         //isLight ? obj.lights[id] = {enabled: false} : obj.groups[id] = {enabled: false}
@@ -140,15 +160,17 @@ const homeController = (() => {
                 while(elements.section_lights.firstChild) elements.section_lights.removeChild(elements.section_lights.firstChild);
 
                 const favoriteData = store.get('favorite').groups;
+                const groupData = store.get('groupState');
                 groups.forEach((group) => {
                     if (group.id !== "0") {
                         const favoriteIdData = favoriteData[group.id];
+                        const groupIdData = groupData[group.id];
                         elements.section_lights.insertAdjacentHTML('beforeend', `
                             <div data-id="${group.id}" data-type="group" class="light__card">
                                 <div>
                                     <span><i ${favoriteIdData && favoriteIdData.enabled ? "style='color: #fffb28'" : ""} class="star mdi ${favoriteIdData && favoriteIdData.enabled ? "mdi-star" : "mdi-star-outline"}"></i></span>
-                                    <span><p>${group.name}</p></span>
-                                    <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                                    <span><p>${group.name}</p></span> 
+                                    <span><i ${groupIdData ? "style='color: #fffb28'" : ""} class="bulb mdi ${groupIdData ? "mdi-lightbulb-on" : "mdi-lightbulb-outline"}"></i></span>                        
                                 </div>
                             </div>                                           
                         `);
@@ -163,6 +185,8 @@ const homeController = (() => {
             elements.mode_favorite.style.color = '#fffb28';
             
             const favoriteData = store.get('favorite');
+            const lightData = store.get('lightState');
+            const groupData = store.get('groupState');
 
             // Show favorite lights
             hue.lights((err, lights) => {
@@ -170,19 +194,20 @@ const homeController = (() => {
                 while(elements.section_lights.firstChild) elements.section_lights.removeChild(elements.section_lights.firstChild);
                 lights.lights.forEach((light) => {
                     const favoriteLight = favoriteData.lights[light.id];
+                    const lightIdData = lightData[light.id];
                     if (favoriteLight && favoriteLight.enabled) {
                         elements.section_lights.insertAdjacentHTML('beforeend', `
-                        <div data-id="${light.id}" data-type="light" class="light__card">
-                        <div>
-                        <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
+                            <div data-id="${light.id}" data-type="light" class="light__card">
+                                <div>
+                                    <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
                                     <span><p>${light.name}</p></span>
-                                    <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                                    <span><i ${lightIdData.on ? "style='color: #fffb28'" : ""} class="bulb mdi ${lightIdData.on ? "mdi-lightbulb-on" : "mdi-lightbulb-outline"}"></i></span>                                                      
                                 </div>
                                 <p>${light.type}</p>
-                                </div>                        
-                                `);
-                            }
-                        });
+                            </div>                        
+                        `);
+                    }
+                });
             });
             
             // Show favorite groups
@@ -193,12 +218,13 @@ const homeController = (() => {
                     if (group.id !== "0") {
                         const favoriteGroup = favoriteData.groups[group.id];
                         if (favoriteGroup && favoriteGroup.enabled) {
+                            const groupIdData = groupData[group.id];
                             elements.section_lights.insertAdjacentHTML('beforeend', `
                                 <div data-id="${group.id}" data-type="group" class="light__card">
                                     <div>
                                         <span><i style="color: #fffb28" class="star mdi mdi-star"></i></span>
                                         <span><p>${group.name}</p></span>
-                                        <span><i class="bulb mdi mdi-lightbulb-outline"></i></span>                            
+                                        <span><i ${groupIdData ? "style='color: #fffb28'" : ""} class="bulb mdi ${groupIdData ? "mdi-lightbulb-on" : "mdi-lightbulb-outline"}"></i></span>                                                    
                                     </div>
                                 </div>                        
                             `);
@@ -251,6 +277,11 @@ const homeController = (() => {
 
             });
         }
+        if(!store.get('groupState', null)) {
+            store.set('groupState', {
+                
+            });
+        }
 
         hue.lights((err, lights) => {
             if (err) throw err;
@@ -260,10 +291,35 @@ const homeController = (() => {
                 setTimeout(() => { // Avoid overloading bridge
                     hue.lightStatus(light.id).then((status) => {
                         lightState[light.id] = status.state;
-                    }).done(store.set('lightState', lightState))
+                    }).done(() => {
+                        store.set('lightState', lightState)
+                    })
                 }, 50*i);
                 i++;
             });
+        });
+        
+        hue.groups((err, groups) => {
+            if (err) throw err;
+            const lightState = store.get('lightState');
+            const groupState = store.get('groupState');
+            groups.forEach((group) => {
+                let allOn = true;
+                // console.log(group);
+                if (group.id !== "0") {
+                    group.lights.forEach((light) => {
+                        if(!lightState[light].on) {
+                            allOn = false;
+                        }
+                    });
+                    if (allOn) {
+                        groupState[group.id] = true;
+                    } else {
+                        groupState[group.id] = false;
+                    }
+                }
+            });
+            store.set('groupState', groupState);
         });
     }
     
